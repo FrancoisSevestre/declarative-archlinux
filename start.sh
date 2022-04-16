@@ -9,7 +9,8 @@ welcome_msg="## AutoInstall: ArchLinux ##"
 echo "$welcome_msg"
 
 # Check for dependencies and user privileges
-if ((EUID)); then # Checking user privileges
+  # Checking user privileges
+if ((EUID)); then 
   echo "#! This script must be run as root. Exiting."
   exit 1
 fi
@@ -17,10 +18,12 @@ fi
 # User input: Choose partitions to install
 echo "# Devices:"
 lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
-echo "#? Select the type of install:" # Ask for install type
+  # Initialize install parameters
 format_disk=false
 partition=false
 boot_partition=false
+  # Ask for install type
+echo "#? Select the type of install:"
 select installtype in "Whole disk install" "Partition install" "Partition install + boot"
 do
   case $installtype in
@@ -42,7 +45,8 @@ done
 
 # Ask user for disk/partitions to use
 grubinstall=false
-if [ $format_disk == true ]; then # User wants to erase disk
+  # User wants to erase disk
+if [ $format_disk == true ]; then
   echo "#? The disk will be formated, select which one:"
   # Ask user which disk to format
   lsblk -d -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
@@ -60,7 +64,8 @@ if [ $format_disk == true ]; then # User wants to erase disk
     break
   done
 
-elif [ $partition == true ]; then # User wants to install system in partition
+  # User wants to install system in partition
+elif [ $partition == true ]; then
   # Ask user on wich partition to install the system
   clear
   lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
@@ -100,4 +105,11 @@ mount "/dev/$osprt" /mnt
 mount --mkdir "/dev/$bootprt" /mnt/boot
 # Pacstrap install
 pacstrap -ic /mnt base linux linux-firmware linux-headers vim
+# Adding grubinstall infos into the layer0 script
+echo "grubinstall=$grubinstall" > layer0/grubinstall.sh
 # Passing Layer 0 script to partition
+mkdir /mnt/install
+cp layer0/ /mnt/install/layer0/
+# Chroot into installed partition
+chmod +x /mnt/install/layer0/layer0.sh
+arch-chroot /mnt ./install/layer0/layer0.sh
