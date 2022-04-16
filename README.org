@@ -14,6 +14,6 @@ It's organised in layers:
 - Timezone: Europe/Paris
 
 ** Usage
-#+GEBIN_SRC bash
+#+BEGIN_SRC bash
 # ./start.sh
 #+END_SRC
