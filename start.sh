@@ -104,12 +104,12 @@ mkdir /mnt
 mount "/dev/$osprt" /mnt
 mount --mkdir "/dev/$bootprt" /mnt/boot
 # Pacstrap install
-pacstrap -ic /mnt base linux linux-firmware linux-headers vim
+pacstrap /mnt base linux linux-firmware linux-headers vim
 # Adding grubinstall infos into the layer0 script
 echo "grubinstall=$grubinstall" > layer0/grubinstall.sh
 # Passing Layer 0 script to partition
 mkdir /mnt/install
-cp layer0/ /mnt/install/layer0/
+cp -r layer0/ /mnt/install/layer0/
 # Chroot into installed partition
 chmod +x /mnt/install/layer0/layer0.sh
 arch-chroot /mnt ./install/layer0/layer0.sh
