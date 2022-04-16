@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Functions
+
+
 # Welcome message
 clear
 welcome_msg="## AutoInstall: ArchLinux ##"
@@ -38,7 +41,7 @@ do
 done
 
 # Ask user for disk/partitions to use
-if [ $format_disk == true ]; then # User wants to erasse disk
+if [ $format_disk == true ]; then # User wants to erase disk
   echo "#? The disk will be formated, select which one:"
   # Ask user which disk to format
   lsblk -d -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
@@ -46,7 +49,12 @@ if [ $format_disk == true ]; then # User wants to erasse disk
   do
     echo "# the disk $disk will be erased" # TODO
     # create partitions
-
+    parted -s "/dev/$disk" mklabel gpt mkpart bootprt fat32 0.0 500.0 mkpart osprt ext4 500.0 100%
+    mkfs.fat -F 32 /dev/"$disk"1
+    mkfs.ext4 /dev/"$disk"2
+    lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
+    sleep 10
+    
     # Use parted
     # install linux
     # install grub
@@ -85,3 +93,8 @@ else
   echo "Error. Exiting."
   exit 1
 fi
+
+# Mounting partitions and installing base packages and Linux 
+# Mounting partitions
+# Pacstrap install
+# Passing Layer 0 script to partition
