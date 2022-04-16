@@ -41,6 +41,7 @@ do
 done
 
 # Ask user for disk/partitions to use
+grubinstall=false
 if [ $format_disk == true ]; then # User wants to erase disk
   echo "#? The disk will be formated, select which one:"
   # Ask user which disk to format
@@ -49,15 +50,13 @@ if [ $format_disk == true ]; then # User wants to erase disk
   do
     echo "# the disk $disk will be erased" # TODO
     # create partitions
-    parted -s "/dev/$disk" mklabel gpt mkpart bootprt fat32 0.0 500.0 mkpart osprt ext4 500.0 100%
-    mkfs.fat -F 32 /dev/"$disk"1
-    mkfs.ext4 /dev/"$disk"2
+    parted -s "/dev/$disk" mklabel gpt mkpart bootprt fat32 0.0 500.0MB mkpart osprt ext4 500.MB0 100%
+    bootprt="$disk"1
+    osprt="$disk"2
+    grubinstall=true
+    mkfs.fat -F 32 /dev/"$bootprt"
+    mkfs.ext4 /dev/"$osprt"
     lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
-    sleep 10
-    
-    # Use parted
-    # install linux
-    # install grub
     break
   done
 
@@ -95,6 +94,10 @@ else
 fi
 
 # Mounting partitions and installing base packages and Linux 
-# Mounting partitions
+  # Mounting partitions
+mkdir /mnt
+mount "/dev/$osprt" /mnt
+mount --mkdir "/dev/$bootprt" /mnt/boot
 # Pacstrap install
+pacstrap -ic /mnt base linux linux-firmware linux-headers vim
 # Passing Layer 0 script to partition
