@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-# Functions
-
-
 # Welcome message
 clear
 welcome_msg="## AutoInstall: ArchLinux ##"
 echo "$welcome_msg"
+
+# Functions
+reset-screen()
+{
+  clear
+  echo "$welcome_msg"
+}
 
 # Check for dependencies and user privileges
   # Checking user privileges
@@ -24,7 +28,10 @@ partition=false
 boot_partition=false
   # Ask for install type
 echo "#? Select the type of install:"
-select installtype in "Whole disk install" "Partition install" "Partition install + boot"
+select installtype in \
+  "Whole disk install" \
+  "Partition install" \
+  "Partition install + boot"
 do
   case $installtype in
     "Whole disk install")
@@ -44,6 +51,7 @@ do
 done
 
 # Ask user for disk/partitions to use
+reset-screen
 grubinstall=false
   # User wants to erase disk
 if [ $format_disk == true ]; then
@@ -54,7 +62,9 @@ if [ $format_disk == true ]; then
   do
     echo "# the disk $disk will be erased" # TODO
     # create partitions
-    parted -s "/dev/$disk" mklabel gpt mkpart bootprt fat32 0.0 500.0MB mkpart osprt ext4 500.MB0 100%
+    parted -s "/dev/$disk" mklabel gpt \
+          mkpart bootprt fat32 0.0 500.0MB \
+          mkpart osprt ext4 500.MB0 100%
     bootprt="$disk"1
     osprt="$disk"2
     grubinstall=true
@@ -67,7 +77,6 @@ if [ $format_disk == true ]; then
   # User wants to install system in partition
 elif [ $partition == true ]; then
   # Ask user on wich partition to install the system
-  clear
   lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
   echo "#? The system will be installed on a disk partition, select wich one."
   select part in $(lsblk -l -o NAME | grep "[0-9]")
@@ -81,7 +90,7 @@ elif [ $partition == true ]; then
 
   if [ $boot_partition == true ]; then
     # Ask user on which partition to install the grub
-    clear
+    reset-screen
     lsblk -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
     echo "#? A boot partition will be installed, select wich one."
     select bpart in $(lsblk -l -o NAME | grep "[0-9]")
@@ -103,13 +112,18 @@ fi
 mkdir /mnt
 mount "/dev/$osprt" /mnt
 mount --mkdir "/dev/$bootprt" /mnt/boot
+
 # Pacstrap install
 pacstrap /mnt base linux linux-firmware linux-headers vim
+# TODO use a personalized pacman config file with -C config.file
+
 # Adding grubinstall infos into the layer0 script
 echo "grubinstall=$grubinstall" > layer0/grubinstall.sh
+
 # Passing Layer 0 script to partition
 mkdir /mnt/install
 cp -r layer0/ /mnt/install/layer0/
+
 # Chroot into installed partition
 chmod +x /mnt/install/layer0/layer0.sh
 arch-chroot /mnt ./install/layer0/layer0.sh
