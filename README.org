@@ -1,0 +1,17 @@
+* AutoInstall - Archlinux
+This collection of scripts aims to automate the installation of archlinux
+from an installation medium.
+It's organised in layers:
+      - Layer 0 :: Partitions mounting and Linux + base packages installation
+      - Layer 1 :: Installation of the CLI tools, configs files, aliases and
+        functions
+      - Layer 2 :: Installation of a GUI environment and GUI tools and
+         associated config files
+
+** Standard configuration
+- Language: French
+- Keyboard: azerty
+- Timezone: Europe/Paris
+
+** Usage
+src_sh{# ./start.sh}

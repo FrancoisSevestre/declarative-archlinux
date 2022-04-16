@@ -46,8 +46,11 @@ if [ $format_disk == true ]; then # User wants to erasse disk
   do
     echo "# the disk $disk will be erased" # TODO
     # create partitions
+
+    # Use parted
     # install linux
     # install grub
+    break
   done
 
 elif [ $partition == true ]; then # User wants to install system in partition
