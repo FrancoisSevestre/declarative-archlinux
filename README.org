@@ -17,3 +17,8 @@ It's organised in layers:
 #+BEGIN_SRC bash
 # ./start.sh
 #+END_SRC
+The script execution can be stopped at any moment by using ~Ctrl+V~
+
+** Layer 0
+*** Installed packages:
+      - 

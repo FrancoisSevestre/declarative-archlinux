@@ -60,7 +60,7 @@ if [ $format_disk == true ]; then
   lsblk -d -o NAME,MOUNTPOINTS,FSTYPE,FSVER,SIZE && echo ""
   select disk in $(lsblk -nd -o NAME)
   do
-    echo "# the disk $disk will be erased" # TODO
+    echo "# the disk $disk will be erased"
     # create partitions
     parted -s "/dev/$disk" mklabel gpt \
           mkpart bootprt fat32 0.0 500.0MB \
@@ -109,8 +109,7 @@ fi
 
 # Mounting partitions and installing base packages and Linux 
   # Mounting partitions
-mkdir /mnt
-mount "/dev/$osprt" /mnt
+mount --mkdir "/dev/$osprt" /mnt
 mount --mkdir "/dev/$bootprt" /mnt/boot
 
 # Pacstrap install
