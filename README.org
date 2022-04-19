@@ -16,9 +16,12 @@ The script execution can be stopped at any moment by using ~Ctrl+C~
 
 ** Layer 0
 *** Installed packages:
-      - linux linux-firmware linux-headers base vim base-devel *-ucode grub
-        efibootmgr os-prober reflector zsh
-        grml-zsh-config zsh-completions wget git
+linux linux-firmware linux-headers base base-devel *-ucode
+grub 
+efibootmgr os-prober reflector 
+zsh grml-zsh-config zsh-completions
+wget git vim
+chaotic-keying chaotic-mirrorlist
 
 ** Layer 1
 ...

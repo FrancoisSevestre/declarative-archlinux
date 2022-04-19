@@ -48,7 +48,7 @@ mount --mkdir /dev/"$os_part" /mnt
 mount --mkdir /dev/"$boot_part" /mnt/boot
 
   # Pacstrap install
-pacstrap -C pacman.conf /mnt base linux linux-firmware linux-headers vim
+pacstrap -C pacman.conf /mnt base linux linux-firmware linux-headers
 
 # Passing Layer 0 script to partition
 mkdir /mnt/install

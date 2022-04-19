@@ -32,7 +32,7 @@ pacman -S zsh grml-zsh-config zsh-completions \
   base-devel \
   amd-ucode \
   grub efibootmgr os-prober \
-  wget git --noconfirm
+  wget git vim --noconfirm
 
 # Creating root password:
 echo "root:$root_passwd" | chpasswd
