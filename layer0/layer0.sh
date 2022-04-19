@@ -46,7 +46,8 @@ printf 'Enter %s'\''s password\n>' "$username"
 passwd "$username"
 
 # grub-install and config
-grub-install --target=x86_64-efi --efi-directory=/boot/grub/ --bootloader-id=GRUB
+# TODO choose MBR or EFI?
+grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # TODO add wheel to sudoers
