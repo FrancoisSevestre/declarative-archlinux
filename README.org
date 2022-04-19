@@ -8,17 +8,30 @@ It's organised in layers:
       - Layer 2 :: Installation of a GUI environment and GUI tools and
          associated config files
 
-** Standard configuration
-- Language: French
-- Keyboard: azerty
-- Timezone: Europe/Paris
-
 ** Usage
 #+BEGIN_SRC bash
-# ./start.sh
+# bash start.sh
 #+END_SRC
-The script execution can be stopped at any moment by using ~Ctrl+V~
+The script execution can be stopped at any moment by using ~Ctrl+C~
 
 ** Layer 0
 *** Installed packages:
-      - 
+      - linux linux-firmware linux-headers base vim base-devel *-ucode grub
+        efibootmgr os-prober reflector zsh
+        grml-zsh-config zsh-completions wget git
+
+** Layer 1
+...
+** Layer 2
+...
+
+** Installation modes
+      1) Declarative mode
+This mode uses the config.yml file written in YAML to install the system. The user
+should adapt this file to it's own needs. Gidelines are provided in the
+default file as comments.
+This mode is the default mode.
+
+      2) interactive mode
+This mode will interactively help user to configure the config.yml file before running the
+main script.
