@@ -25,13 +25,8 @@ The script execution can be stopped at any moment by using ~Ctrl+C~
 ** Layer 2
 ...
 
-** Installation modes
-      1) Declarative mode
-This mode uses the config.yml file written in YAML to install the system. The user
+** Declarative mode
+This mode uses the config.cfg file to install the system. The user
 should adapt this file to it's own needs. Gidelines are provided in the
 default file as comments.
 This mode is the default mode.
-
-      2) interactive mode
-This mode will interactively help user to configure the config.yml file before running the
-main script.
