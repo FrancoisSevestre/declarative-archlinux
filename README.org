@@ -10,7 +10,11 @@ It's organised in layers:
 
 ** Usage
 #+BEGIN_SRC bash
-# bash start.sh
+# Use git to clone this repository to your arch installation medium
+pacman -Sy git
+git clone https://gitlab.com/francoissevestre/autoinstall-archlinux.git
+cd autoinstall-archlinux
+bash start.sh
 #+END_SRC
 The script execution can be stopped at any moment by using ~Ctrl+C~
 

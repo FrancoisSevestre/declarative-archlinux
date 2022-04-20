@@ -31,7 +31,9 @@ if [ $install_type == "full_disk" ]; then
   os_part="$disk"2
 
 elif [ $install_type == "custom_part" ]; then
-  echo "this" # TODO
+  # check specified partitions
+  lsblk -l -o NAME | grep "$os_part" || echo "OS partition not found."
+  lsblk -l -o NAME | grep "$boot_part" || echo "Boot partition not found."
 
 else
   echo "Error in config file (install_type). Exiting" && exit 1

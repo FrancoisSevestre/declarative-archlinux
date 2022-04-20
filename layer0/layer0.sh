@@ -23,6 +23,7 @@ echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
 pacman -Syyu --noconfirm
 
 # Installing wifi and internet services
+# TODO take in account the specified network parameters
 pacman -S iwd dhcpcd --noconfirm 
 systemctl enable iwd
 systemctl enable dhcpcd
