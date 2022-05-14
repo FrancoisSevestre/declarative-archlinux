@@ -14,9 +14,11 @@ It's organised in layers:
 pacman -Sy git
 git clone https://gitlab.com/francoissevestre/autoinstall-archlinux.git
 cd autoinstall-archlinux
+# At this step you should edit the configuration file "config.cfg"
 bash start.sh
 #+END_SRC
-The script execution can be stopped at any moment by using ~Ctrl+C~
+The script execution can be stopped at any moment by using ~Ctrl+C~ and then
+re-run if necessairy.
 
 ** Layer 0
 *** Installed packages:
