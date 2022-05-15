@@ -22,11 +22,6 @@ green()
   echo -e "\e[1;32m$*\e[0m"
 }
 
-log0()
-{
-  printf "[layer0] "
-}
-
 is_root()
 {
   if ((EUID)); then
@@ -36,27 +31,97 @@ is_root()
   fi
 }
 
-is_OK()
-# Usage: is_OK "command" "pre-message" "error message"
-{
-  printf '%s...' "$2"
-  if $1 >> install.log 2>&1 && true || false; then
-    printf '%s\n' "$(green "OK")"
-  else
-    printf '%s\n' "$(red "$3")"
-    exit 1
-  fi
-}
+log (){
+  LOG_LEVEL="INFO"
+  MESSAGE="Executing command"
+  COMMAND="echo 'No command given'"
+  ALLOW_FAILURE=false
+  LOG_FILE="install.log"
+  SUCCESS_MESSAGE="OK"
+  FAIL_MESSAGE="Fail"
+  HELP="..." # TODO
+  NO_TEST=false
+  
+  POSITIONAL_ARGS=()
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --log-level|-l)
+        LOG_LEVEL="$2"
+        shift
+        shift
+        ;;
+        
+      --message|-m)
+        MESSAGE="$2"
+        shift
+        shift
+        ;;
 
-is_OK_verbose()
-# Usage: is_OK "command" "pre-message" "error message"
-{
-  printf '%s...\n' "$2"
-  if $1 && true || false; then
-    printf '%s...%s\n' "$2" "$(green "OK")"
+      --command|-c)
+        COMMAND="$2"
+        shift
+        shift
+        ;;
+
+      --allow-failure|-a)
+        ALLOW_FAILURE=true
+        shift
+        ;;
+
+      --no-test|-e)
+        NO_TEST=true
+        shift
+        ;;
+
+      --log-file|-f)
+        LOG_FILE="$2"
+        shift
+        shift
+        ;;
+
+      --succes-message|-s)
+        SUCCESS_MESSAGE="$2"
+        shift
+        shift
+        ;;
+
+      --fail-message|-n)  
+        FAIL_MESSAGE="$2"
+        shift
+        shift
+        ;;
+
+      --help|-h)
+        echo $HELP
+        exit 0
+        ;;
+
+      --*|-*)
+        echo "unknown argument $1"
+        exit 1
+        ;;
+
+      *)
+        POSITIONAL_ARGS+=("$1")
+        shift
+        ;;
+    esac
+  done
+  
+
+  printf '[%s]:%s...' "$LOG_LEVEL" "$MESSAGE"
+  if [ $NO_TEST == false ]; then
+    if $COMMAND >> "$LOG_FILE" 2>&1 && true || false; then
+      printf '%s\n' "$(green "$SUCCESS_MESSAGE")"
+    else
+      if [ $ALLOW_FAILURE == true ]; then
+        printf '%s\n' "$(red "$FAIL_MESSAGE, but ignored")"
+      else
+        printf '%s\n' "$(red "$FAIL_MESSAGE")"
+        exit 1
+      fi
+    fi
   else
-    printf '%s...%s\n' "$2" "$(red "$3")"
-    killall tail
-    exit 1
+    printf '\n'
   fi
 }
