@@ -5,13 +5,16 @@ source functions.sh
 chmod u+x base-installer.sh layer0/start-layer0.sh layer0/layer0.sh
 
 # Installing tmux
-log0 && is_OK "pacman -S tmux expect --noconfirm" "Installing misc tools" "Failed"
+log -c "pacman -S tmux expect --noconfirm" -m "Installing misc tools" -l "BASE INSTALL"
+log -e -m "Launching installation" -l "BASE INSTALL"
 
-log0 && echo "Starting install"
+# Launching tmux session
 tmux new-session -s main './base-installer.sh'
 
-log0 && echo "Chrooting"
+log -e -m "Chrooting" -l "BASE INSTALL"
 arch-chroot /mnt ./install/layer0/start-layer0.sh
+
+log -e -m "Unmounting partitions" -l "BASE INSTALL"
 umount /mnt/boot
 umount /mnt
 sleep 2
