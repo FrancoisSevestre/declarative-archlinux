@@ -48,3 +48,4 @@ log -c "grub-mkconfig -o /boot/grub/grub.cfg" -m "Generating grub config" -l "LA
 
 # TODO add wheel to sudoers
 tmux kill-session
+exit
