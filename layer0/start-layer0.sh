@@ -15,7 +15,7 @@ echo "KEYMAP=$vconsole" > /etc/vconsole.conf
 echo "$hostname" > /etc/hostname
 
 # Installing tmux
-log0 && is_OK "pacman -S tmux --noconfirm" "Installing misc tools" "Failed"
+log0 && is_OK "pacman -S tmux expect --noconfirm" "Installing misc tools" "Failed"
 export LANG=fr_FR.UTF-8
 
 # Launching tmux window
