@@ -13,7 +13,7 @@ source /install/layer0/config.cfg
 # Pacman optimisation
 log -c "unbuffer -p pacman -S reflector --noconfirm" -m "Installing Reflector" -l "LAYER0"
 log -c "reflector -l 5 -p http --sort rate --save /etc/pacman.d/mirrorlist" -m "Updating mirror list with reflector" -l "LAYER0"
-#log -c "pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com" -m "Fetching chaotic AUR keys" -l "LAYER0"
+#log -c "pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com" -m "Fetching chaotic AUR keys" -l "LAYER0" # TODO re-enable with security
 #log -c "pacman-key --lsign-key FBA220DFC880C036" -m "Adding keys" -l "LAYER0"
 #log -c "pacman -U https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst --noconfirm" \
 #  -m "Installing chaotic AUR keyring" -l "LAYER0"

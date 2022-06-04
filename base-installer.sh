@@ -2,7 +2,7 @@
 
 # Launching logs in split window
 tmux split-window -l 14
-tmux send 'tail -f -s 0.3 install.log' ENTER
+tmux send 'tail -f -s 0.3 install.log' ENTER # TODO The file has to exist
 
 # Functions
 source functions.sh
@@ -17,18 +17,20 @@ log -c "is_root" -m "Checking user privileges" \
 log -c "pacman -V" -m "Looking for pacman" \
   -n "pacman is not present on the system." -l "BASE INSTALL"
 
-# importing configuration
+# Importing configuration
 source config.cfg
 
+# Full disk install
 if [ $install_type == "full_disk" ]; then
-  log -e -m "$(warning  "The disk $disk will be erased.")" -l "BASE INSTALL"
+  log -e -m "$(warning  "The disk $disk will be erased. Use Ctrl+C to stop.")" -l "BASE INSTALL"
   sleep 5
   log -c "parted -s /dev/$disk mklabel $part_table_type mkpart bootprt fat32  2048s $boot_part_size mkpart osprt $os_part_type $boot_part_size $os_part_size" \
-      -m "Creating partitions on the disk" -l "BASE INSTALL"
+      -m "Creating partitions on the disk" -l "BASE INSTALL" # TODO Split the command
 
   boot_part="$disk"1 # TODO check partition names before continue
   os_part="$disk"2
 
+# Custom partitions install
 elif [ $install_type == "custom_part" ]; then
   # check specified partitions
   lsblk -l -o NAME | grep "$os_part" || log -e -m "$(red "OS partition not found.")" -l "BASE INSTALL"
@@ -36,6 +38,7 @@ elif [ $install_type == "custom_part" ]; then
     lsblk -l -o NAME | grep "$boot_part" || log -e -m "$(red "Boot partition not found.")" -l "BASE INSTALL"
   fi
 
+# If config failed
 else
   log -e -m "$(red "Error in config file (install_type). Exiting")" -l "BASE INSTALL"
   exit 1
@@ -44,7 +47,6 @@ fi
 # Formating partitions
 log -c "mkfs -t $os_part_type /dev/$os_part" -m "Formatting partition $os_part" -l "BASE INSTALL"
    
-
 if [ "$boot_part" != false ]; then
   log -c "mkfs.fat -F 32 /dev/$boot_part" -m "Formatting partition $boot_part" -l "BASE INSTALL"
 fi
@@ -61,14 +63,16 @@ fi
 log -c "unbuffer -p pacstrap -C pacman.conf /mnt base linux linux-firmware linux-headers" \
   -m "Installing base packages (this may take a while)" -l "BASE INSTALL"
 
+# Creating fstab
+log -c "genfstab -U /mnt" -f "/mnt/etc/fstab" -l "BASE INSTALL" -m "Creating fstab" # TODO Check if user is sudo
+
 # Passing Layer 0 script to partition
 log -c "mkdir /mnt/install" -m "Creating scripts folder" -l "BASE INSTALL"
 log -c "cp -t layer0/ functions.sh config.cfg" -m "Copying files before transfert" -l "BASE INSTALL"
 log -c "cp -r layer0/ /mnt/install/layer0/" -m "Transferring scripts" -l "BASE INSTALL"
 log -c "cp pacman.conf /mnt/install/" -m "Copying pacman configuration" -l "BASE INSTALL"
-
-# Chroot into installed partition
-log -c "chmod +x /mnt/install/layer0/layer0.sh" -m "chmod scripts" -l "BASE INSTALL"
+log -c "cp install.log /mnt/" -m "Copying logs" -l "BASE INSTALL" -a
+log -c "chmod +x /mnt/install/layer0/*" -m "chmod scripts" -l "BASE INSTALL" # TODO Check necessity
 
 sleep 2
 tmux kill-session
