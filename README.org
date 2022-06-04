@@ -12,7 +12,7 @@ It's organised in layers:
 #+BEGIN_SRC bash
 # Use git to clone this repository to your arch installation medium
 pacman -Sy git
-git clone https://gitlab.com/francoissevestre/autoinstall-archlinux.git
+git clone https://gitlab.com/francoissevestre/declarative-archlinux.git
 cd autoinstall-archlinux
 # At this step you should edit the configuration file "config.cfg"
 bash start.sh
