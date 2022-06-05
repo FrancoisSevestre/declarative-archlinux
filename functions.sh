@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Reads the config.yml file present in the cwd 
+# Exemple: readconfig .install_type[0]
+readconfig()
+{
+  yq -r ".$1" < config.yml
+}
 
 reset-screen()
 {
