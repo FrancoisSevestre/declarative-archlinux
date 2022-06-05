@@ -2,13 +2,12 @@
 
 # Functions
 source /install/layer0/functions.sh
+log -c "cd /install/layer0/" -m "Moving to install directory" -l "LAYER0"
 
 # logs in tmux side window
 tmux split-window -l 14
 tmux send 'tail -f install.log' ENTER
 
-# Get parameters
-source /install/layer0/config.cfg
 
 # Pacman optimisation
 log -c "unbuffer -p pacman -S reflector --noconfirm" -m "Installing Reflector" -l "LAYER0"
@@ -33,19 +32,43 @@ log -c "unbuffer -p pacman -S zsh grml-zsh-config zsh-completions \
   grub efibootmgr os-prober \
   wget git vim --noconfirm" -m "Installing base tools" -l "LAYER0"
 
+# Reading config file
+root_passwd=$(readconfig system.root_password)
+
 # Creating root password:
-echo root:$root_passwd | chpasswd
+log -e -m "Setting root password" -l "LAYER0"
+echo root:"$root_passwd" | chpasswd
 
 # Creating standard user:
-useradd -m -G wheel -s /bin/zsh $user_name
-echo $user_name:$user_passwd | chpasswd
+  # Looping throught users
+(( user_index = $(readconfig "system.users | length") - 1 ))
+for user in $(seq 0 $user_index)
+do
+  user_name=$(readconfig "system.users[$user].name")
+  user_passwd=$(readconfig "system.users[$user].password")
+  user_shell=$(readconfig "system.users[$user].shell")
+
+  log -e -m "Creating user $user_name" -l "LAYER0"
+  useradd -m -s "$user_shell" "$user_name"
+  echo "$user_name":"$user_passwd" | chpasswd
+
+  (( group_index = $(readconfig "system.users[$user].groups | length") - 1 ))
+  for group in $(seq 0 $group_index)
+  do
+    usermod -a -G "$(readconfig "system.users[$user].groups[$group]")" "$user_name"
+  done
+done
 
 # grub-install and config
 # TODO choose MBR or EFI?
-# TODO check if grub is to be installed
-log -c "grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=GRUB" -m "Installing grub" -l "LAYER0"
-log -c "grub-mkconfig -o /boot/grub/grub.cfg" -m "Generating grub config" -l "LAYER0"
+if [ "$(readconfig "install_type")" == "disk" ] || [ "$(readconfig "custom_install.boot_part.enable")" != false ]; then
+  log -c "grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=GRUB" -m "Installing grub" -l "LAYER0"
+  log -c "grub-mkconfig -o /boot/grub/grub.cfg" -m "Generating grub config" -l "LAYER0"
+fi
 
 # TODO add wheel to sudoers
+
+log -e -m "Layer0 install complete" -l "LAYER0"
+sleep 3
 tmux kill-session
 exit

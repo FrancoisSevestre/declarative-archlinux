@@ -1,41 +1,22 @@
 * AutoInstall - Archlinux
-This collection of scripts aims to automate the installation of archlinux
-from an installation medium.
-It's organised in layers:
-      - Layer 0 :: Partitions mounting and Linux + base packages installation
-      - Layer 1 :: Installation of the CLI tools, configs files, aliases and
-        functions
-      - Layer 2 :: Installation of a GUI environment and GUI tools and
-         associated config files
+These scripts aims to automate the installation of archlinux from an installation medium.
+This project uses a declarative approach: The user customizes a configuration
+file (config.yml) that contains all the informations requiered for the installation.
 
 ** Usage
 #+BEGIN_SRC bash
 # Use git to clone this repository to your arch installation medium
 pacman -Sy git
 git clone https://gitlab.com/francoissevestre/declarative-archlinux.git
-cd autoinstall-archlinux
-# At this step you should edit the configuration file "config.cfg"
+cd declarative-archlinux
+# At this step you should edit the configuration file "config.yml"
 bash start.sh
 #+END_SRC
 The script execution can be stopped at any moment by using ~Ctrl+C~ and then
 re-run if necessairy.
 
-** Layer 0
-*** Installed packages:
-linux linux-firmware linux-headers base base-devel *-ucode
-grub 
-efibootmgr os-prober reflector 
-zsh grml-zsh-config zsh-completions
-wget git vim
-chaotic-keying chaotic-mirrorlist
-
-** Layer 1
-...
-** Layer 2
-...
-
-** Declarative mode
-This mode uses the config.cfg file to install the system. The user
-should adapt this file to it's own needs. Gidelines are provided in the
+The user should adapt this file to it's own needs. Gidelines are provided in the
 default file as comments.
-This mode is the default mode.
+For more informations regarding the installation, please visit
+[[https://wiki.archlinux.org/title/Installation_guide][the ArchLinux wiki]].
+

@@ -1,0 +1,68 @@
+---
+# This file contains the configuration that will be used by the installer.
+# The first information to provide (and the most important one) is the
+# type of installation:
+#   - "disk" will erase the given disk and create partitions on it.
+#   - "custom" lets you handle prior partitioning.
+install_type: disk
+
+# The section has to be customized if you choose the "disk" install
+disk_install:
+  disk: vda  # Use the lsblk command to find the disks available
+  part_table_type: gpt  # gpt or mbr
+  boot_part:
+    create: true  # Set to false if you already have a boot partition elsewhere,
+    # but you should reconfigure the bootloader after the install.
+    # format: Fat32 (Only Fat32 is available for now)
+    size: 500MB  # The size of the partition
+  os_part:
+    format: ext4  # The format of the partition, some formats may require
+    # additionnal packages
+    size: 100%  # The size of the partition
+  home_part:
+    create: false  # Set to true for creating a separate home partition
+    format: ext4  # The format of the partition
+    size: 20GB  # The size of the partition
+  swap_part:
+    create: false  # Set to true for creating a separate home partition
+    size: 10GB  # The size of the partition
+
+# This section has to be customized if you choose the "custom" install
+custom_install:
+  boot_part:
+    enable: true
+    location: vda1
+    # format: Fat32 (Only Fat32 is available for now)
+  os_part:
+    location: vda2
+    format: ext4  # The format of the partition, some formats may require
+    # additionnal packages
+  home_part:
+    enable: false
+    location: vda3
+    format: ext4  # The format of the partition
+  swap_part:
+    enable: false
+    location: vda4
+
+# System parameters
+system:
+  zone_info: Europe/Paris  # Time zone
+  locale: fr_FR.UTF-8  # One of the locales given in /usr/share/i18n/locales
+  charset: UTF-8  # One of the character sets listed in /usr/share/i18n/charmaps
+  extra_locale: []  # If more lines are to be added in locale.gen
+  vconsole: fr-latin1  # Keyboard layout
+  hostname: autoarch  # The name of the OS
+  root_password: "abcd"
+  users:  # List user to be created in this section
+    - name: "me"
+      password: "abcd"
+      groups:  # Groups in which the user should be added
+        - wheel
+        - audio
+      shell: /bin/zsh  # User default shell
+    - name: "notme"
+      password: "abcd"
+      groups:  # Groups in which the user should be added
+        - wheel
+      shell: /bin/bash  # User default shell
