@@ -70,7 +70,7 @@ do
 done
 
 # Add wheel to sudoers
-sed '0,/# %wheel/s//%wheel/' /etc/sudoers
+sed -i '0,/# %wheel/s//%wheel/' /etc/sudoers
 
 # grub-install and config
 # TODO choose MBR or EFI?
