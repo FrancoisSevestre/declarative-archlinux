@@ -70,7 +70,7 @@ do
 done
 
 # Add wheel to sudoers
-sed 's/0,/# %wheel/s//%wheel/' /etc/sudoers
+sed '0,/# %wheel/s//%wheel/' /etc/sudoers
 
 # grub-install and config
 # TODO choose MBR or EFI?
@@ -87,7 +87,7 @@ log -c "unbuffer -p pacman -S $(readconfig "system.packages[]") --noconfirm" -m 
 for service in $(seq 0 $services)
 do
   
-  log -c "systemctl enable $(readconfig "system.services[$service]")" -m "enabling service $(readconfig "system.services[$service]")" -l "LAYER0"
+  log -a -c "systemctl enable $(readconfig "system.services[$service]")" -m "enabling service $(readconfig "system.services[$service]")" -l "LAYER0"
 done
 
 
