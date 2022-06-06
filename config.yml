@@ -55,14 +55,27 @@ system:
   hostname: autoarch  # The name of the OS
   root_password: "abcd"
   users:  # List user to be created in this section
-    - name: "me"
+    - name: "user1"
       password: "abcd"
+      shell: /bin/zsh  # User default shell
       groups:  # Groups in which the user should be added
         - wheel
         - audio
-      shell: /bin/zsh  # User default shell
-    - name: "notme"
+    - name: "user2"
       password: "abcd"
+      shell: /bin/bash  # User default shell
       groups:  # Groups in which the user should be added
         - wheel
-      shell: /bin/bash  # User default shell
+  packages:
+    # Several default packages are installed.
+    # (base-devel, grub, efibootmgr, os-prober, dhcpcd, iwd,
+    # # reflector, wget, curl, vim, tmux, expect, yq, zsh)
+    # Here you can specify additionnal packages to be installed
+    - zsh-completions
+    - grml-zsh-config
+    - htop
+    - bat
+    - fd
+
+  services:
+    - sshd
