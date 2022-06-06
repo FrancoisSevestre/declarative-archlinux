@@ -76,6 +76,9 @@ system:
     - htop
     - bat
     - fd
+    - openssh
+    - man-db
+    - man-pages
 
   services:
     - sshd
