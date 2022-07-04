@@ -25,10 +25,20 @@ log -c "unbuffer -p pacman -S iwd dhcpcd --noconfirm" -m "Installing network too
 log -c "systemctl enable iwd" -m "enabling iwd servicea" -l "LAYER0"
 log -c "systemctl enable dhcpcd" -m "enabling dhcpcd service" -l "LAYER0"
 
+# TODO Determining CPU brand, installing ucode
+cpu_vendor=$(grep -i "vendor_id" /proc/cpuinfo| uniq | cut -d ' ' -f 2)
+if [ "$cpu_vendor" == "AuthenticAMD" ]; then
+  ucode_package="amd-ucode"
+elif [ "$cpu_vendor" == "GenuineIntel" ]; then
+  ucode_package="intel-ucode"
+else
+  ucode_package=""
+fi
+
 # Base tools installation
-log -c "unbuffer -p pacman -S zsh grml-zsh-config zsh-completions \
+log -c "unbuffer -p pacman -S zsh \
   base-devel \
-  amd-ucode \
+  $ucode_package \
   grub efibootmgr os-prober \
   wget git vim --noconfirm" -m "Installing base tools" -l "LAYER0"
 
@@ -59,6 +69,9 @@ do
   done
 done
 
+# Add wheel to sudoers
+sed -i '0,/# %wheel/s//%wheel/' /etc/sudoers
+
 # grub-install and config
 # TODO choose MBR or EFI?
 if [ "$(readconfig "install_type")" == "disk" ] || [ "$(readconfig "custom_install.boot_part.enable")" != false ]; then
@@ -66,7 +79,17 @@ if [ "$(readconfig "install_type")" == "disk" ] || [ "$(readconfig "custom_insta
   log -c "grub-mkconfig -o /boot/grub/grub.cfg" -m "Generating grub config" -l "LAYER0"
 fi
 
-# TODO add wheel to sudoers
+# Installing additional packages
+log -c "unbuffer -p pacman -S $(readconfig "system.packages[]") --noconfirm" -m "Installing additionnal packages" -l "test"
+
+# Starting additionnal services
+(( services = $(readconfig "system.services | length") - 1 ))
+for service in $(seq 0 $services)
+do
+  
+  log -a -c "systemctl enable $(readconfig "system.services[$service]")" -m "enabling service $(readconfig "system.services[$service]")" -l "LAYER0"
+done
+
 
 log -e -m "Layer0 install complete" -l "LAYER0"
 sleep 3
