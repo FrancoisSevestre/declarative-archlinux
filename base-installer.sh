@@ -41,7 +41,7 @@ if [ "$install_type" == "disk" ]; then
   # TODO Handle home and swap partitions
 
 # Custom partitions install
-elif [ "$install_type" == "custom_part" ]; then
+elif [ "$install_type" == "custom" ]; then
 
   # Read config for disk install
   os_part=$(readconfig custom_install.os_part.location)
