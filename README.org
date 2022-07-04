@@ -11,7 +11,10 @@ git clone https://gitlab.com/francoissevestre/declarative-archlinux.git
 cd declarative-archlinux
 #+END_SRC
 At this step you should edit the configuration file "config.yml".
-To run the script use :~bash start.sh~.
+To run the script use :
+#+BEGIN_SRC bash
+bash start.sh
+#+END_SRC
 The script execution can be stopped at any moment by using ~Ctrl+C~ and then
 re-run if necessairy.
 
