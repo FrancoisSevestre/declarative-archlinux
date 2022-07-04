@@ -10,8 +10,8 @@ pacman -Sy git
 git clone https://gitlab.com/francoissevestre/declarative-archlinux.git
 cd declarative-archlinux
 #+END_SRC
-At this step you should edit the configuration file "config.yml"
-~bash start.sh~
+At this step you should edit the configuration file "config.yml".
+To run the script use :~bash start.sh~.
 The script execution can be stopped at any moment by using ~Ctrl+C~ and then
 re-run if necessairy.
 
