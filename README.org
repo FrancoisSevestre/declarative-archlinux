@@ -9,9 +9,9 @@ file (config.yml) that contains all the informations requiered for the installat
 pacman -Sy git
 git clone https://gitlab.com/francoissevestre/declarative-archlinux.git
 cd declarative-archlinux
-# At this step you should edit the configuration file "config.yml"
-bash start.sh
 #+END_SRC
+At this step you should edit the configuration file "config.yml"
+~bash start.sh~
 The script execution can be stopped at any moment by using ~Ctrl+C~ and then
 re-run if necessairy.
 
